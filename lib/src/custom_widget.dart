@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:before_after_image_slider_nullsafty/src/rect_clipper.dart';
 
 class BeforeAfter extends StatefulWidget {
   final Widget beforeImage;
@@ -165,3 +167,4 @@ class CustomThumbShape extends SliderComponentShape {
         paint);
   }
 }
+
