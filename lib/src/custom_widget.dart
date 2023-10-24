@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:before_after_image_slider_nullsafty/src/rect_clipper.dart';
-
 class BeforeAfter extends StatefulWidget {
   final Widget beforeImage;
   final Widget afterImage;
@@ -38,36 +37,30 @@ class _BeforeAfterState extends State<BeforeAfter> {
       alignment: Alignment.center,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Before', style: TextStyle(color: Colors.white)),
-              SizedImage(
-                widget.beforeImage,
-                widget.imageHeight,
-                widget.imageWidth,
-                widget.imageCornerRadius,
-              ),
-            ],
+          padding: widget.isVertical
+              ? const EdgeInsets.symmetric(vertical: 24.0)
+              : const EdgeInsets.symmetric(horizontal: 24.0),
+          child: SizedImage(
+            widget.afterImage,
+            widget.imageHeight,
+            widget.imageWidth,
+            widget.imageCornerRadius,
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('After', style: TextStyle(color: Colors.white)),
-              ClipPath(
-                clipper: RectClipper(_clipFactor),
-                child: SizedImage(
-                  widget.afterImage,
-                  widget.imageHeight,
-                  widget.imageWidth,
-                  widget.imageCornerRadius,
-                ),
-              ),
-            ],
+          padding: widget.isVertical
+              ? const EdgeInsets.symmetric(vertical: 24.0)
+              : const EdgeInsets.symmetric(horizontal: 24.0),
+          child: ClipPath(
+            clipper: widget.isVertical
+                ? RectClipperVertical(_clipFactor)
+                : RectClipper(_clipFactor),
+            child: SizedImage(
+              widget.beforeImage,
+              widget.imageHeight,
+              widget.imageWidth,
+              widget.imageCornerRadius,
+            ),
           ),
         ),
         Positioned.fill(
@@ -78,11 +71,20 @@ class _BeforeAfterState extends State<BeforeAfter> {
               thumbShape:
                   CustomThumbShape(widget.thumbRadius, widget.thumbColor),
             ),
-            child: Slider(
-              value: _clipFactor,
-              onChanged: (double factor) =>
-                  setState(() => this._clipFactor = factor),
-            ),
+            child: widget.isVertical
+                ? RotatedBox(
+                    quarterTurns: 1,
+                    child: Slider(
+                      value: _clipFactor,
+                      onChanged: (double factor) =>
+                          setState(() => this._clipFactor = factor),
+                    ),
+                  )
+                : Slider(
+                    value: _clipFactor,
+                    onChanged: (double factor) =>
+                        setState(() => this._clipFactor = factor),
+                  ),
           ),
         ),
       ],
@@ -167,4 +169,3 @@ class CustomThumbShape extends SliderComponentShape {
         paint);
   }
 }
-
